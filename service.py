@@ -1,17 +1,14 @@
-from audioop import add
-from bdb import set_trace
 import requests
 import json
 import time
 from config import *
 from models import Token
-from utils import *
 
 class APISource:
 
-    def __init__(self, symbol) -> None:
+    def __init__(self, address, symbol) -> None:
         self.api_key = WEB3_API_KEY
-        self.address = ""
+        self.address = address
         self.symbol = symbol
 
     def get_abi(self):
@@ -22,42 +19,29 @@ class APISource:
         ).json()
         return result['result']
 
-
-    def fetch_contract(self, address:str):
-        "Fetch the contract details (ABI)"
-        self.address = Web3.toChecksumAddress(address)
-        self.abi = json.loads(self.get_abi())
-        return "Done"
-    
-
-    def fetch_tx(self):
-        "Initialize Web3 Connection"
-        # import pdb; pdb.set_trace()
-        self.web3 = Web3(Web3.HTTPProvider(NODE_PROVIDER))
-
-        if self.web3.isConnected() == True:
-
-            #fetch addr transaction
-            # addr = Web3.toChecksumAddress('0x2b591e99afe9f32eaa6214f7b7629768c40eeb39')
+    def get_contract(self):
+        "Fetch Contract Instance Address & ABI"
+        try:
+            # bytecode = web3_client.eth.getCode(self.address)
+            # print(bytecode)
+            self.abi = self.get_abi()
             addr = Web3.toChecksumAddress(self.address)
+            self.contract = web3_client.eth.contract(
+                address=addr,
+                abi=self.abi
+            )
+            return self.contract
+        except Exception as e:
+            logging.error(f"Failed to Fetch Contract - {e}")
+            return None
 
-            self.token_contract = self.web3.eth.contract(address=addr, abi=self.abi) 
-            
-            while True:
-                filter = self.token_contract.events.Transfer().createFilter(fromBlock='latest')
-
-                txs = filter.get_new_entries()
-                # import pdb; pdb.set_trace()
-                if len(txs) > 0:
-                    return [txs[i]['transactionHash'] for i in range(len(txs))]
-                else:
-                    print(txs)
-                    time.sleep(120)
-                    continue
-
-
-        else:
-            return False
+    def get_buy_events(self):
+        "Returns An Event Filter For Buy Actions Only"
+        import pdb;
+        pdb.set_trace()
+        event_filter = self.contract.events.Transfer.createFilter(fromBlock='latest')
+        return event_filter
+    
 
     def get_token(self, address:str):
         "Fetch Token ABI and symbol"
@@ -83,8 +67,8 @@ class APISource:
         #Pull Token TX
         # data = pull_tx_info(tx, token)
 
-        tx_data =  self.web3.eth.get_transaction_receipt(tx)
-        tx_logs = self.token_contract.events.Transfer().processReceipt(tx_data)
+        tx_data =  web3_client.eth.get_transaction_receipt(tx)
+        tx_logs = self.contract.events.Transfer().processReceipt(tx_data)
 
         input_log = {}
         output_log = {}

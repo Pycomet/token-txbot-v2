@@ -1,7 +1,6 @@
-from ast import Raise
+from main import *
 from config import *
 from service import APISource
-from utils import *
 
 
 # Business logic For Sending Out Blasts Here
@@ -16,62 +15,27 @@ def run():
     channels = data['channels']
 
     # pull token in models
-    token = data['tokens'][0]
-    client = APISource(token['symbol'])
+    tokens = data['tokens']
 
-    status = client.fetch_contract(token['address'])
+    filters = {}
+    for token in tokens:
+        print(token["symbol"])
+        print(token["address"])
 
-    if status == "Done":
-        while True:
-            tx_ids = client.fetch_tx()
+        client = APISource(address=token["address"], symbol=token["symbol"])
+        contract = client.get_contract()
+        
+        if contract is not None:
+            filters[token["symbol"]] = client.get_buy_events()
 
-            if tx_ids in [False, []]:
-                print(f"{tx_ids}failed")
-                time.sleep(60)
-                pass
+        else:
+            print("Invalid Contract Address!!!")
 
-            else:
-                for tx in tx_ids:
-                    data = client.fetch_data(tx)
-
-                    for group in channels:
-                        
-                        if data is not None:
-                            # import pdb; pdb.set_trace()
-
-                            if data['trade'] == "BUY":
-
-                                bot.send_message(
-                                    int(group['Group Id']),
-                                    f"""
-    {client.symbol} {data['trade']} !
-    🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢
-    Spent: {data['spent']}
-    Got: {data['got']}
-    Buyer Position: {data['position']}
-    Price: {data['fee']}
-    MCap: {data['market-cap']}
-    TX | Dex            
-                                    """
-                                )
-
-                            else:
-
-                                bot.send_message(
-                                    int(group['Group Id']),
-                                    f"""
-    {client.symbol} {data['trade']} !
-    🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴🔴
-    Spent: {data['spent']}
-    Got: {data['got']}
-    Seller Position: {data['position']}
-    Price: {data['fee']}
-    MCap: {data['market-cap']}
-    TX | Dex            
-                                    """
-                                )
-
-
+    while True:
+        for symbol, event_filter in filters.items():
+            events = event_filter.get_new_entries()
+            if events:
+                start_event(symbol, events[0])
 
 
 if __name__ == "__main__":

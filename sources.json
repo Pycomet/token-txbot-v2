@@ -11,16 +11,12 @@
     ],
     "tokens": [
         {
-            "symbol": "NCR",
-            "address": "0xdb5c3c46e28b53a39c255aa39a411dd64e5fed9c"
+            "symbol": "MATIC",
+            "address": "0x3D0830aA84daE5Bb64eA091A943DFbEB0719eC52"
         },
         {
-            "symbol": "ELONONE",
-            "address": "0x97b65710d03e12775189f0d113202cc1443b0aa2"
-        },
-        {
-            "symbol": "OHM",
-            "address": "0x64aa3364f17a4d01c6f1751fd97c2bd3d7e7f1d5"
+            "symbol": "APE",
+            "address": "0x4d224452801ACEd8B2F0aebE155379bb5D594381"
         }
     ]
 }
