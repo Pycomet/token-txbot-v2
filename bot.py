@@ -35,7 +35,22 @@ def run():
         for symbol, event_filter in filters.items():
             events = event_filter.get_new_entries()
             if events:
-                start_event(symbol, events[0])
+
+                res_data = client.get_buy_event_infura(Web3.toHex(events[0]['transactionHash']))
+                tx_hash = res_data['result']['hash']
+                tx_input = res_data['result']['input']
+                
+                resp = web3_client.eth.getTransactionReceipt(tx_hash)['logs']
+                status = client.is_buy_event(receipt=resp)
+                print(status, f"hash({symbol}) - {tx_hash}")
+
+                data = client.get_tx_details(tx_hash, token_symbol=symbol)
+
+                if status == True:
+                    start_event(symbol, events[0])
+                else:
+                    print(data)
+                    print("Not a valid Buy action")
 
 
 if __name__ == "__main__":

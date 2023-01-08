@@ -11,12 +11,16 @@
     ],
     "tokens": [
         {
-            "symbol": "MATIC",
-            "address": "0x3D0830aA84daE5Bb64eA091A943DFbEB0719eC52"
+            "symbol": "BONKO",
+            "address": "0x3eE269eF849C7e264Afd6A2d4f61266fc97092f0"
         },
         {
-            "symbol": "APE",
-            "address": "0x4d224452801ACEd8B2F0aebE155379bb5D594381"
+            "symbol": "BD",
+            "address": "0x970Dc33D76A7bE48Dc4D319c0ED44d9A3fc81ecD"
+        },
+        {
+            "symbol": "BC",
+            "address": "0xe03B2642A5111aD0EFc0cbCe766498c2dd562Ae9"
         }
     ]
 }

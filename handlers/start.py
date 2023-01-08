@@ -14,9 +14,9 @@ def startbot(msg):
 
 
 def start_event(symbol, event):
-    res = event['transactionHash'].decode()
+    res = Web3.toHex(event['transactionHash'])
     print(res)
     bot.send_message(
         577180091,
-        f"New {symbol} Event - {res}"
+        f"New {symbol} Buy Event - {res}"
     )
