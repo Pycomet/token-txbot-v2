@@ -33,14 +33,6 @@ class APISource:
 
         return 
 
-    def is_buy_event(self, receipt: list):
-        "Check if there is a buy event"
-        for log in receipt:
-            # Check if the log is a "buy" event
-            if log['topics'][0] == web3_client.keccak(text="buy()"):
-                return True
-        return False
-
     def get_buy_event_infura(self, tx):
         "Using infura mainets"
         # Set the parameters for the API call
@@ -108,12 +100,16 @@ class APISource:
         # Send a GET request to the Ethereum API to retrieve the transaction details
         tx = web3_client.eth.getTransaction(tx_hash)
         # Extract the relevant details from the transaction
+        # print(f"TEXTXTTX - {tx}")
         tx_details = {
-            'price': tx['value'] / 1000000000000000000,
+            'price': round(tx['value'] / 1000000000000000000, 2),
             'gas_used': tx['gas'],
             'block_number': tx['blockNumber'],
             'timestamp': web3_client.eth.getBlock(tx['blockNumber'])['timestamp'],
             'tx_index': tx['transactionIndex'],
+            'tx_hash': tx_hash,
+            'address': tx['from'],
+            'contractAddress': self.address
         }
 
         # Determine whether the transaction was a buy or a sell event
@@ -133,19 +129,56 @@ class APISource:
         if tx_details['buy_or_sell'] == 'buy':
             # Retrieve the current price of ETH in USD
             r = requests.get('https://api.coinbase.com/v2/prices/ETH-USD/spot')
-            eth_price_usd = r.json()['data']['amount']
+            eth_usd_price = r.json()['data']['amount']
             # Calculate the value of the transaction in ETH and USD
             value_eth = tx_details['price']
-            value_usd = value_eth * float(eth_price_usd)
-            # Retrieve the live market cap of the token
-            # Get the total supply of the token
+            value_usd = value_eth * float(eth_usd_price)
+
+
+            # # Call the totalSupply() function of the contract
             total_supply = self.contract.functions.totalSupply().call()
+            # Call the getCurrentPrice() function of the contract
+            # Calculate the market cap in USD
+            market_cap = total_supply * float(value_usd / float(value_eth))
+
+
+
+            # # Etherscan API endpoint
+            # endpoint = f'https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress={self.address}&apikey={self.api_key}'
+
+            # # Make the API call
+            # response = requests.get(endpoint)
+
+            # data = response.json()
+            # total_supply = int(data["result"])
+
+            # url_price = f"https://api.coingecko.com/api/v3/coins/{token_symbol}?localization=false"
+            # response_price = requests.get(url_price)
+            # data_price = response_price.json()
+            # price_usd = data_price["market_data"]["current_price"]["usd"]
+
+            # market_cap = total_supply * price_usd
+            # print(f"Diluted Market Cap: ${market_cap}")
+
+
+
+            # abc_url = f"https://api.coingecko.com/api/v3/simple/price?ids={token_symbol.lower()}&vs_currencies=eth"
+            # response = requests.get(abc_url)
+            # abc_data = response.json()
+            # abc_eth_price = abc_data[token_symbol]["eth"]
+            # print(abc_eth_price)
+
+            # abc_usd_price = abc_eth_price * eth_usd_price
+            # market_cap = total_supply * abc_usd_price
+            # print(f"Diluted Market Cap: ${market_cap:,}")
+
+
+
+            print(f"Market cap of the token in USD is: {market_cap}")
+            tx_details['market_cap'] = round(market_cap, 3)
             tx_details['token_symbol'] = token_symbol
-            # Get the current exchange rate of the token in US dollars
-            market_cap = ( total_supply * value_usd ) / tx['value']
-            tx_details['market_cap'] = market_cap
-            tx_details['eth_value'] = value_eth
-            tx_details['usd_value'] = value_usd
+            tx_details['eth_value'] = round(value_eth, 3)
+            tx_details['usd_value'] = round(value_usd, 3)
 
         # Return the transaction details
         return tx_details

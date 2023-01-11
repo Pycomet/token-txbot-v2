@@ -41,15 +41,13 @@ def run():
                 tx_input = res_data['result']['input']
                 
                 resp = web3_client.eth.getTransactionReceipt(tx_hash)['logs']
-                status = client.is_buy_event(receipt=resp)
-                print(status, f"hash({symbol}) - {tx_hash}")
 
                 data = client.get_tx_details(tx_hash, token_symbol=symbol)
 
-                if status == True:
-                    start_event(symbol, events[0])
-                else:
+                if data['buy_or_sell'] == 'buy':
                     print(data)
+                    start_event(symbol, data)
+                else:
                     print("Not a valid Buy action")
 
 
