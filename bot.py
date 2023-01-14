@@ -18,9 +18,13 @@ def run():
     tokens = data['tokens']
 
     filters = {}
+    token_data = {}
+
     for token in tokens:
         print(token["symbol"])
         print(token["address"])
+
+        token_data[token['symbol']] = token['address']
 
         client = APISource(address=token["address"], symbol=token["symbol"])
         contract = client.get_contract()
@@ -36,6 +40,11 @@ def run():
             events = event_filter.get_new_entries()
             if events:
 
+                # Update preset contract addresses
+                client.symbol = symbol
+                client.address = token_data[symbol]
+                print(events[0])
+
                 res_data = client.get_buy_event_infura(Web3.toHex(events[0]['transactionHash']))
                 tx_hash = res_data['result']['hash']
 
@@ -48,5 +57,5 @@ def run():
                     print("Not a valid Buy action")
 
 
-# if __name__ == "__main__":
-#     run()
+if __name__ == "__main__":
+    run()

@@ -7,14 +7,14 @@ import multiprocessing
 @app.route('/' + TOKEN, methods=['POST', 'GET'])
 def checkWebhook():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
-    process = multiprocessing.Process(target=run)
-    process.start()
     return "Your bot application is still active!", 200
 
 
 @app.route("/")
 def webhook():
     bot.remove_webhook()
+    process = multiprocessing.Process(target=run)
+    process.start()
     bot.set_webhook(url=SERVER_URL + '/' + TOKEN)
     return "Application running!", 200
 
