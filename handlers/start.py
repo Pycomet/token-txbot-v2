@@ -1,4 +1,5 @@
 from config import *
+from bot import *
 import multiprocessing
 
 @bot.message_handler(commands=['start'])
