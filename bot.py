@@ -23,6 +23,7 @@ def run():
     for token in tokens:
         print(token["symbol"])
         print(token["address"])
+        logging.info(f"Provision {token['symbol']} - {token['address']}")
 
         token_data[token['symbol']] = token['address']
 
@@ -51,7 +52,7 @@ def run():
                 data = client.get_tx_details(tx_hash, token_symbol=symbol)
 
                 if data['buy_or_sell'] == 'buy':
-                    print(data)
+                    logging.info(f"New Event!!! - {data}")
                     start_event(symbol, data)
                 else:
                     print("Not a valid Buy action")
