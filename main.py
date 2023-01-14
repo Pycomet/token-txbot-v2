@@ -13,8 +13,6 @@ def checkWebhook():
 @app.route("/")
 def webhook():
     bot.remove_webhook()
-    process = multiprocessing.Process(target=run)
-    process.start()
     bot.set_webhook(url=SERVER_URL + '/' + TOKEN)
     return "Application running!", 200
 

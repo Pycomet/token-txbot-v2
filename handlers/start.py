@@ -1,4 +1,5 @@
 from config import *
+import multiprocessing
 
 @bot.message_handler(commands=['start'])
 def startbot(msg):
@@ -10,6 +11,9 @@ def startbot(msg):
         msg,
         f"Welcome To Token Transaction Buy Bot, Your Bot Session Is Live And Running - {msg.from_user.id}"
     )
+
+    process = multiprocessing.Process(target=run)
+    process.start()
     
 
 
@@ -39,7 +43,7 @@ def start_event(symbol, event):
         f"<a href='https://google.com'>{event['token_symbol']}</a> Buy! \n🟢🟢🟢🟢🟢🟢🟢🟢 \
             \n\n 💵 {event['price']} ETH (${event['usd_value']}) \
             \n 🪪 <a href='https://etherscan.io/address/{event['address']}'>{event['address'][:5]}...{event['address'][-4:]}</a> | <a href='https://etherscan.io/tx/{event['tx_hash']}'>Txn</a>| Track \
-            \n 🔘 Market Cap ${event['market_cap']} \
+            \n 🔘 Market Cap <b> ${event['market_cap']}</b> \
             \n\n <a href='https://dexscreener.com/ethereum/{event['contractAddress']}'>📊 Chart</a>",
         parse_mode="html"
     )
