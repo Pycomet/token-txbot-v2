@@ -10,6 +10,7 @@ def startbot(msg):
         msg,
         f"Welcome To Token Transaction Buy Bot, Your Bot Session Is Live And Running - {msg.from_user.id}"
     )
+    
 
 
 # Bitcoin Buy!
@@ -34,7 +35,7 @@ def start_event(symbol, event):
 
 
     bot.send_message(
-        -374682568,
+        TARGET_GROUP,
         f"<a href='https://google.com'>{event['token_symbol']}</a> Buy! \n🟢🟢🟢🟢🟢🟢🟢🟢 \
             \n\n 💵 {event['price']} ETH (${event['usd_value']}) \
             \n 🪪 <a href='https://etherscan.io/address/{event['address']}'>{event['address'][:5]}...{event['address'][-4:]}</a> | <a href='https://etherscan.io/tx/{event['tx_hash']}'>Txn</a>| Track \

@@ -15,20 +15,20 @@
             "address": "0x2A67690325f75E3FEB72d979d2e0d7E67710A8d1"
         },
         {
-            "symbol": "LIX",
-            "address": "0x370661E873aD566678A742Af3e116BBb912aA99c"
+            "symbol": "IC",
+            "address": "0x80b265d534709e7f274d6afc2faecb50ff77e910"
         },
         {
             "symbol": "BC",
             "address": "0xe03B2642A5111aD0EFc0cbCe766498c2dd562Ae9"
         },
         {
-            "symbol": "EYE",
-            "address": "0x4519f2B8aBc474089e0a81F07d7DAb4E35948baB"
+            "symbol": "KNDM",
+            "address": "0x1ae378cC5d38350Ec90cE9bcf827a544cB2BBA75"
         },
         {
-            "symbol": "OHMI",
-            "address": "0x4159862bcF6B4393A80550b1ed03DFfa6f90533C"
+            "symbol": "$ANZEN",
+            "address": "0x175BCA415Df9739ef5b9a685dd22d76D26189c20"
         }
     ]
 }

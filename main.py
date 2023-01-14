@@ -1,6 +1,8 @@
 from config import *
 from handlers import *
+from bot import *
 import os
+import multiprocessing
 
 @app.route('/' + TOKEN, methods=['POST', 'GET'])
 def checkWebhook():
@@ -20,7 +22,9 @@ if __name__ == "__main__":
     if DEBUG != True:
         app.run(host="0.0.0.0", threaded=True, port=int(os.environ.get('PORT', 5000)))
     else:
+        process = multiprocessing.Process(target=run)
         bot.remove_webhook()
+        process.start()
         print("Bot polling!")
         bot.polling()
         

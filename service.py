@@ -1,8 +1,18 @@
 import requests
 import json
 import time
+import math
 from config import *
 from models import Token
+
+
+def format_number(num):
+    if num >= 1000000:
+        return f"{num/1000000:.2f}M"
+    elif num >= 1000:
+        return f"{num/1000:.2f}K"
+    else:
+        return str(num)
 
 class APISource:
 
@@ -96,13 +106,67 @@ class APISource:
         return price_eth, symbol.upper()
 
 
+    
+    def get_token_price_usd(self, token_address, eth_price):
+        "Fetch The Token Price From Uniswap with GraphQl"
+        url = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
+
+        query = """
+            query getToken($token_address: String!) {
+                token (id: $token_address) {
+                    name
+                    symbol
+                    decimals
+                    derivedETH
+                    tradeVolumeUSD
+                    totalLiquidity
+                }
+            }
+        """
+
+        # define the request headers
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        res = requests.post(url, json={"query": query, "variables": {
+            "token_address": token_address.lower()
+        }}, headers=headers)
+        if res.status_code == 200:
+            print(json.dumps(res.json(), indent=2))
+            try:
+                eth_value = res.json()['data']['token']['derivedETH']
+                usd_value = float(eth_price) * float(eth_value)
+                return round(usd_value, 4)
+            except:
+                if res.json()['errors']:
+                    logging.error(Exception(f"{res.json()['errors'][0]['message']}"))
+                else:
+                    logging.error("Token Not Found")
+        else:
+            logging.error(Exception(f"Query failed to run with a {res.status_code}."))
+
+
+    def get_market_cap_usd(self, unit_value):
+        "Get The USD Market Cap calue of the token"
+        res = requests.get(f"https://api.ethplorer.io/getTokenInfo/{self.address}?apiKey=freekey")
+
+        data = res.json()
+        decimals = int(data['decimals'])
+        total_supply = int(data['totalSupply'])
+
+        def_res = float(total_supply) * float(unit_value)
+        market_cap = def_res / math.pow(10, decimals)
+        return "{:,}".format(market_cap)
+
+
     def get_tx_details(self, tx_hash, token_symbol):
         # Send a GET request to the Ethereum API to retrieve the transaction details
         tx = web3_client.eth.getTransaction(tx_hash)
         # Extract the relevant details from the transaction
         # print(f"TEXTXTTX - {tx}")
         tx_details = {
-            'price': round(tx['value'] / 1000000000000000000, 2),
+            'price': round(tx['value'] / 1000000000000000000, 6),
             'gas_used': tx['gas'],
             'block_number': tx['blockNumber'],
             'timestamp': web3_client.eth.getBlock(tx['blockNumber'])['timestamp'],
@@ -128,54 +192,21 @@ class APISource:
         # If the transaction was a buy event, retrieve the token name, value in ETH and USD, and market cap
         if tx_details['buy_or_sell'] == 'buy':
             # Retrieve the current price of ETH in USD
-            r = requests.get('https://api.coinbase.com/v2/prices/ETH-USD/spot')
-            eth_usd_price = r.json()['data']['amount']
+
+            price = cc.get_price('ETH', currency="USD")
+
             # Calculate the value of the transaction in ETH and USD
+            eth_usd_price = price['ETH']['USD']
             value_eth = tx_details['price']
             value_usd = value_eth * float(eth_usd_price)
 
+            unit_usd = self.get_token_price_usd(token_address=self.address, eth_price=eth_usd_price)
 
-            # # Call the totalSupply() function of the contract
-            total_supply = self.contract.functions.totalSupply().call()
-            # Call the getCurrentPrice() function of the contract
-            # Calculate the market cap in USD
-            market_cap = total_supply * float(value_usd / float(value_eth))
-
-
-
-            # # Etherscan API endpoint
-            # endpoint = f'https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress={self.address}&apikey={self.api_key}'
-
-            # # Make the API call
-            # response = requests.get(endpoint)
-
-            # data = response.json()
-            # total_supply = int(data["result"])
-
-            # url_price = f"https://api.coingecko.com/api/v3/coins/{token_symbol}?localization=false"
-            # response_price = requests.get(url_price)
-            # data_price = response_price.json()
-            # price_usd = data_price["market_data"]["current_price"]["usd"]
-
-            # market_cap = total_supply * price_usd
-            # print(f"Diluted Market Cap: ${market_cap}")
-
-
-
-            # abc_url = f"https://api.coingecko.com/api/v3/simple/price?ids={token_symbol.lower()}&vs_currencies=eth"
-            # response = requests.get(abc_url)
-            # abc_data = response.json()
-            # abc_eth_price = abc_data[token_symbol]["eth"]
-            # print(abc_eth_price)
-
-            # abc_usd_price = abc_eth_price * eth_usd_price
-            # market_cap = total_supply * abc_usd_price
-            # print(f"Diluted Market Cap: ${market_cap:,}")
-
+            market_cap = self.get_market_cap_usd(unit_value=unit_usd)
 
 
             print(f"Market cap of the token in USD is: {market_cap}")
-            tx_details['market_cap'] = round(market_cap, 3)
+            tx_details['market_cap'] = market_cap
             tx_details['token_symbol'] = token_symbol
             tx_details['eth_value'] = round(value_eth, 3)
             tx_details['usd_value'] = round(value_usd, 3)

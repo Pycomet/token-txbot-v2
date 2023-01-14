@@ -1,4 +1,4 @@
-from main import *
+from handlers.start import *
 from config import *
 from service import APISource
 
@@ -38,9 +38,6 @@ def run():
 
                 res_data = client.get_buy_event_infura(Web3.toHex(events[0]['transactionHash']))
                 tx_hash = res_data['result']['hash']
-                tx_input = res_data['result']['input']
-                
-                resp = web3_client.eth.getTransactionReceipt(tx_hash)['logs']
 
                 data = client.get_tx_details(tx_hash, token_symbol=symbol)
 
@@ -51,5 +48,5 @@ def run():
                     print("Not a valid Buy action")
 
 
-if __name__ == "__main__":
-    run()
+# if __name__ == "__main__":
+#     run()

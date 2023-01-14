@@ -8,6 +8,7 @@ from flask import Flask, request
 from datetime import date
 import telebot
 from telebot import types
+import cryptocompare as cc
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -23,11 +24,13 @@ TOKEN = os.getenv('TOKEN')
 
 cwd = os.getcwd()
 
-DEBUG = True
+DEBUG = False
 SERVER_URL = os.getenv("SERVER_URL")
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
+
+TARGET_GROUP = int(os.getenv("TARGET_GROUP"))
 
 WEB3_API_KEY = os.getenv("WEB3_API_KEY")
 
