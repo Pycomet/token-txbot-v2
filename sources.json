@@ -29,6 +29,14 @@
         {
             "symbol": "$ANZEN",
             "address": "0x175BCA415Df9739ef5b9a685dd22d76D26189c20"
+        },
+        {
+            "symbol": "MBR",
+            "address": "0xDDB0212fBf765983861143Ef252bdAF18da63274"
+        },
+        {
+            "symbol": "Cuddly",
+            "address": "0xA467C9adc54f2Bc3406D672671129602b7D2abBd"
         }
     ]
 }
