@@ -45,16 +45,21 @@ def run():
                 client.address = token_data[symbol]
                 print(events[0])
 
-                res_data = client.get_buy_event_infura(Web3.toHex(events[0]['transactionHash']))
-                tx_hash = res_data['result']['hash']
+                try:
+                    res_data = client.get_buy_event_infura(Web3.toHex(events[0]['transactionHash']))
+                    tx_hash = res_data['result']['hash']
 
-                data = client.get_tx_details(tx_hash, token_symbol=symbol)
+                    data = client.get_tx_details(tx_hash, token_symbol=symbol)
 
-                if data['buy_or_sell'] == 'buy':
-                    logging.info(f"New Event!!! - {data}")
-                    start_event(symbol, data)
-                else:
-                    print("Not a valid Buy action")
+                    if data['buy_or_sell'] == 'buy':
+                        logging.info(f"New Event!!! - {data}")
+                        start_event(symbol, data)
+                    else:
+                        print("Not a valid Buy action")
+
+
+                except Exception as e:
+                    logging.error("Please check & fix bug")
 
 
 

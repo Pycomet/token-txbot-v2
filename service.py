@@ -137,7 +137,7 @@ class APISource:
             try:
                 eth_value = res.json()['data']['token']['derivedETH']
                 usd_value = float(eth_price) * float(eth_value)
-                return round(usd_value, 4)
+                return round(usd_value, 6)
             except:
                 if res.json()['errors']:
                     logging.error(Exception(f"{res.json()['errors'][0]['message']}"))
@@ -166,7 +166,7 @@ class APISource:
         # Extract the relevant details from the transaction
         # print(f"TEXTXTTX - {tx}")
         tx_details = {
-            'price': round(tx['value'] / 1000000000000000000, 6),
+            'price': round(tx['value'] / 1000000000000000000, 9),
             'gas_used': tx['gas'],
             'block_number': tx['blockNumber'],
             'timestamp': web3_client.eth.getBlock(tx['blockNumber'])['timestamp'],
