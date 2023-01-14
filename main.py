@@ -1,6 +1,6 @@
 from config import *
 from handlers import *
-# from bot import *
+from bot import *
 import os
 import multiprocessing
 
@@ -14,6 +14,9 @@ def checkWebhook():
 def webhook():
     bot.remove_webhook()
     bot.set_webhook(url=SERVER_URL + '/' + TOKEN)
+
+    process = multiprocessing.Process(target=run)
+    process.start()
     return "Application running!", 200
 
 

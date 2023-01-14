@@ -1,4 +1,3 @@
-from handlers.start import *
 from config import *
 from service import APISource
 
@@ -56,6 +55,29 @@ def run():
                     start_event(symbol, data)
                 else:
                     print("Not a valid Buy action")
+
+
+
+def start_event(symbol, event):
+    "Send Buy Event To Group"
+    print(event)
+    bot.send_message(
+        577180091,
+        f"New {symbol} Buy Event - {event}"
+    )
+
+
+    bot.send_message(
+        TARGET_GROUP,
+        f"<a href='https://google.com'>{event['token_symbol']}</a> Buy! \n🟢🟢🟢🟢🟢🟢🟢🟢 \
+            \n\n 💵 {event['price']} ETH (${event['usd_value']}) \
+            \n 🪪 <a href='https://etherscan.io/address/{event['address']}'>{event['address'][:5]}...{event['address'][-4:]}</a> | <a href='https://etherscan.io/tx/{event['tx_hash']}'>Txn</a>| Track \
+            \n 🔘 Market Cap <b> ${event['market_cap']}</b> \
+            \n\n <a href='https://dexscreener.com/ethereum/{event['contractAddress']}'>📊 Chart</a>",
+        parse_mode="html"
+    )
+
+
 
 
 if __name__ == "__main__":
