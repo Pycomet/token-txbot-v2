@@ -157,7 +157,7 @@ class APISource:
 
         def_res = float(total_supply) * float(unit_value)
         market_cap = def_res / math.pow(10, decimals)
-        return "{:,}".format(market_cap)
+        return "{:,.0f}".format(market_cap)
 
 
     def get_tx_details(self, tx_hash, token_symbol):
