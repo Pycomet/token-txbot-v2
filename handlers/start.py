@@ -15,7 +15,8 @@ def startbot(msg):
 
 
     for e in active_children():
-        print(e.name)
-        continue
-    
+        bot.send_message(
+            msg.from_user.id,
+            f"{e.name} Running...."
+        )
 
