@@ -106,9 +106,8 @@ class APISource:
         return price_eth, symbol.upper()
 
 
-    
-    def get_token_price_usd(self, token_address, eth_price):
-        "Fetch The Token Price From Uniswap with GraphQl"
+    def get_token_info(self, token_address):
+        "Get Token Data"
         url = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
 
         query = """
@@ -135,16 +134,24 @@ class APISource:
         if res.status_code == 200:
             print(json.dumps(res.json(), indent=2))
             try:
-                eth_value = res.json()['data']['token']['derivedETH']
-                usd_value = float(eth_price) * float(eth_value)
-                return round(usd_value, 6)
+                response = res.json()
+                return response
             except:
-                if res.json()['errors']:
-                    logging.error(Exception(f"{res.json()['errors'][0]['message']}"))
-                else:
-                    logging.error("Token Not Found")
+                if response['errors']:
+                    logging.error(Exception(f"{response['errors'][0]['message']}"))
         else:
             logging.error(Exception(f"Query failed to run with a {res.status_code}."))
+
+
+    
+    def get_token_price_usd(self, token_address, eth_price):
+        "Fetch The Token Price From Uniswap with GraphQl"
+        response = self.get_token_info(token_address=token_address)
+
+        eth_value = response['data']['token']['derivedETH']
+        usd_value = float(eth_price) * float(eth_value)
+        return round(usd_value, 6), response['data']['token']['name'] ### Add name as extra export params
+
 
 
     def get_market_cap_usd(self, unit_value):
@@ -200,13 +207,14 @@ class APISource:
             value_eth = tx_details['price']
             value_usd = value_eth * float(eth_usd_price)
 
-            unit_usd = self.get_token_price_usd(token_address=self.address, eth_price=eth_usd_price)
+            unit_usd, _name = self.get_token_price_usd(token_address=self.address, eth_price=eth_usd_price)
 
             market_cap = self.get_market_cap_usd(unit_value=unit_usd)
 
 
             print(f"Market cap of the token in USD is: {market_cap}")
             tx_details['market_cap'] = market_cap
+            tx_details['name'] = _name
             tx_details['token_symbol'] = token_symbol
             tx_details['eth_value'] = round(value_eth, 3)
             tx_details['usd_value'] = round(value_usd, 3)

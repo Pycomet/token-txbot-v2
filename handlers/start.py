@@ -1,5 +1,5 @@
 from config import *
-import multiprocessing
+from multiprocessing import active_children
 
 @bot.message_handler(commands=['start'])
 def startbot(msg):
@@ -9,8 +9,13 @@ def startbot(msg):
 
     bot.reply_to(
         msg,
-        f"Welcome To Token Transaction Buy Bot, Your Bot Session Is Live And Running - {msg.from_user.id}"
+        f"Welcome To Token Transaction Buy Bot, \n\n Your Bot Session Is Live And Watching {len(active_children())} Tokens With Ease 😊  \n\n  <b>ID: {msg.from_user.id}</b>",
+        parse_mode="html"
     )
 
+
+    for e in active_children():
+        print(e.name)
+        continue
     
 

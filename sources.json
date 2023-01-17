@@ -1,22 +1,12 @@
 {
-    "channels": [
-        {
-            "Group Name": "Shibaken",
-            "Group Id": "-1001558617536"
-        },
-        {
-            "Group Name": "Test Channel",
-            "Group Id": "-1001229308480"
-        }
-    ],
     "tokens": [
         {
-            "symbol": "EI",
-            "address": "0x2A67690325f75E3FEB72d979d2e0d7E67710A8d1"
+            "symbol": "BAG",
+            "address": "0x235C8EE913d93c68D2902a8e0b5a643755705726"
         },
         {
-            "symbol": "IC",
-            "address": "0x80b265d534709e7f274d6afc2faecb50ff77e910"
+            "symbol": "OHMI",
+            "address": "0x4159862bcF6B4393A80550b1ed03DFfa6f90533C"
         },
         {
             "symbol": "BC",
@@ -31,12 +21,12 @@
             "address": "0x175BCA415Df9739ef5b9a685dd22d76D26189c20"
         },
         {
-            "symbol": "MBR",
-            "address": "0xDDB0212fBf765983861143Ef252bdAF18da63274"
+            "symbol": "PROXY",
+            "address": "0x82089a9c7c4a07352F7433fBce1D4Ee9a722fF29"
         },
         {
-            "symbol": "Cuddly",
-            "address": "0xA467C9adc54f2Bc3406D672671129602b7D2abBd"
+            "symbol": "NEX",
+            "address": "0x0B62C509e81428943Eca89D512a4c8108Ab630Dd"
         }
     ]
 }
