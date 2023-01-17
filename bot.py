@@ -45,10 +45,11 @@ def start_streaming(symbol, address):
         if events:
 
             try:
-                res_data = client.get_buy_event_infura(Web3.toHex(events[0]['transactionHash']))
-                tx_hash = res_data['result']['hash']
+                # res_data = client.get_buy_event_infura(Web3.toHex(events[0]['transactionHash']))
+                # tx_hash = res_data['result']['hash']
 
-                data = client.get_tx_details(tx_hash, token_symbol=symbol)
+                # data = client.get_tx_details(tx_hash, token_symbol=symbol)
+                data = client.get_tx_details(events[0]['transactionHash'], token_symbol=symbol)
 
                 if data['buy_or_sell'] == 'buy':
                     logging.info(f"New Event!!! - {data}")
