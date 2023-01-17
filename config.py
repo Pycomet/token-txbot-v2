@@ -31,8 +31,7 @@ SERVER_URL = os.getenv("SERVER_URL")
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-print(os.getenv("TARGET_GROUP_ID"))
-TARGET_GROUP_ID = int(os.getenv("TARGET_GROUP_ID"))
+TARGET_GROUP = int(os.getenv("TARGET_GROUP"))
 
 WEB3_API_KEY = os.getenv("WEB3_API_KEY")
 
