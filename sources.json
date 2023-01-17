@@ -28,5 +28,11 @@
             "symbol": "NEX",
             "address": "0x0B62C509e81428943Eca89D512a4c8108Ab630Dd"
         }
+    ],
+    "channels": [
+        {
+            "Group Name": "ETH Trending Chat",
+            "Group Id": "-374682568"
+        }
     ]
 }
