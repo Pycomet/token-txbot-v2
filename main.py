@@ -14,9 +14,7 @@ def checkWebhook():
 def webhook():
     bot.remove_webhook()
     bot.set_webhook(url=SERVER_URL + '/' + TOKEN)
-
-    process = multiprocessing.Process(target=run)
-    process.start()
+    run()
     return "Application running!", 200
 
 
