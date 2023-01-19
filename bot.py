@@ -34,7 +34,7 @@ def start_streaming(symbol, address):
         filters = client.get_buy_events()
     else:
         bot.send_message(
-            -374682568,
+            -1001553783220,
             f"🔔 Invalid Contract Address For {symbol} \n\n <b>Action Required 🔔🔔</b>"
         )
         logging.error(f"END STREAM (Invalid Contract Address)- {address}!!!")
@@ -68,18 +68,18 @@ def start_event(symbol, event):
     file = open(f"{cwd}/sources.json")
     data = json.load(file)
 
-    channels = data['channels']
-    for chat in channels:
-        bot.send_message(
-            int(chat["Group Id"]),
-            f"<b>{event['name']} ({symbol})</b> Buy! \n🟢🟢🟢🟢🟢🟢 \
-                \n\n 💵 {event['price']} ETH (${event['usd_value']}) \
-                \n 🪪 <a href='https://etherscan.io/address/{event['address']}'>{event['address'][:5]}...{event['address'][-4:]}</a> | <a href='https://etherscan.io/tx/{event['tx_hash']}'>Txn</a>| Track \
-                \n 🔘 Market Cap <b> ${event['market_cap']}</b> \
-                \n\n <a href='https://dexscreener.com/ethereum/{event['contractAddress']}'>📊 Chart</a>",
-            parse_mode="html",
-            disable_web_page_preview=True
-        )
+    # channels = data['channels']
+    # for chat in channels:
+    bot.send_message(
+        -1001553783220,
+        f"<b>{event['name']} ({symbol})</b> Buy! \n🟢🟢🟢🟢🟢🟢 \
+            \n\n 💵 {event['price']} ETH (${event['usd_value']}) \
+            \n 🪪 <a href='https://etherscan.io/address/{event['address']}'>{event['address'][:5]}...{event['address'][-4:]}</a> | Txn | Track \
+            \n 🔘 Market Cap <b> ${event['market_cap']}</b> \
+            \n\n <a href='https://dexscreener.com/ethereum/{event['contractAddress']}'>📊 Chart</a>",
+        parse_mode="html",
+        disable_web_page_preview=True
+    )
 
 
 
