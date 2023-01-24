@@ -14,6 +14,7 @@ def format_number(num):
     else:
         return str(num)
 
+
 class APISource:
 
     def __init__(self, address, symbol) -> None:
@@ -41,7 +42,7 @@ class APISource:
 
         print(decoded_input)
 
-        return 
+        return
 
     def get_buy_event_infura(self, tx):
         "Using infura mainets"
@@ -49,7 +50,8 @@ class APISource:
         params = {
             "jsonrpc": "2.0",
             "method": "eth_getTransactionByHash",
-            "params": [tx],  # Replace 0x123... with the transaction hash you want to retrieve
+            # Replace 0x123... with the transaction hash you want to retrieve
+            "params": [tx],
             "id": 1,
         }
 
@@ -85,11 +87,11 @@ class APISource:
         "Returns An Event Filter For Buy Actions Only"
         # import pdb;
         # pdb.set_trace()
-        event_filter = self.contract.events.Transfer.createFilter(fromBlock='latest')
+        event_filter = self.contract.events.Transfer.createFilter(
+            fromBlock='latest')
         return event_filter
-    
 
-    def get_token(self, address:str):
+    def get_token(self, address: str):
         "Fetch Token ABI and symbol"
         # addr = Web3.isChecksumAddress(address)
         # abi = json.loads(self.get_abi())
@@ -104,7 +106,6 @@ class APISource:
         symbol = result['symbol']
 
         return price_eth, symbol.upper()
-
 
     def get_token_info(self, token_address):
         "Get Token Data"
@@ -138,25 +139,25 @@ class APISource:
                 return response
             except:
                 if response['errors']:
-                    logging.error(Exception(f"{response['errors'][0]['message']}"))
+                    logging.error(
+                        Exception(f"{response['errors'][0]['message']}"))
         else:
-            logging.error(Exception(f"Query failed to run with a {res.status_code}."))
+            logging.error(
+                Exception(f"Query failed to run with a {res.status_code}."))
 
-
-    
     def get_token_price_usd(self, token_address, eth_price):
         "Fetch The Token Price From Uniswap with GraphQl"
         response = self.get_token_info(token_address=token_address)
 
         eth_value = response['data']['token']['derivedETH']
         usd_value = float(eth_price) * float(eth_value)
-        return round(usd_value, 6), response['data']['token']['name'] ### Add name as extra export params
-
-
+        # Add name as extra export params
+        return usd_value, response['data']['token']['name']
 
     def get_market_cap_usd(self, unit_value):
         "Get The USD Market Cap calue of the token"
-        res = requests.get(f"https://api.ethplorer.io/getTokenInfo/{self.address}?apiKey=freekey")
+        res = requests.get(
+            f"https://api.ethplorer.io/getTokenInfo/{self.address}?apiKey=freekey")
 
         data = res.json()
         decimals = int(data['decimals'])
@@ -165,7 +166,6 @@ class APISource:
         def_res = float(total_supply) * float(unit_value)
         market_cap = def_res / math.pow(10, decimals)
         return "{:,.0f}".format(market_cap)
-
 
     def get_tx_details(self, tx_hash, token_symbol):
         # Send a GET request to the Ethereum API to retrieve the transaction details
@@ -195,7 +195,6 @@ class APISource:
         else:
             tx_details['new_wallet_owner'] = True
 
-
         # If the transaction was a buy event, retrieve the token name, value in ETH and USD, and market cap
         if tx_details['buy_or_sell'] == 'buy':
             # Retrieve the current price of ETH in USD
@@ -207,10 +206,10 @@ class APISource:
             value_eth = tx_details['price']
             value_usd = value_eth * float(eth_usd_price)
 
-            unit_usd, _name = self.get_token_price_usd(token_address=self.address, eth_price=eth_usd_price)
+            unit_usd, _name = self.get_token_price_usd(
+                token_address=self.address, eth_price=eth_usd_price)
 
             market_cap = self.get_market_cap_usd(unit_value=unit_usd)
-
 
             print(f"Market cap of the token in USD is: {market_cap}")
             tx_details['market_cap'] = market_cap
@@ -222,10 +221,7 @@ class APISource:
         # Return the transaction details
         return tx_details
 
-    
-        
-
-    def write_channel_to_json(self, name:str, id:str):
+    def write_channel_to_json(self, name: str, id: str):
         "Write New Channel to Database"
         file = open(f'{cwd}/sources.json')
         data = json.load(file)
@@ -238,6 +234,3 @@ class APISource:
         with open(f'{cwd}/sources.json', 'w') as json_file:
             json.dump(data, json_file, indent=4)
             json_file.close()
-
-
-
