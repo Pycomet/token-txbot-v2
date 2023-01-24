@@ -10,7 +10,7 @@ def startbot(msg):
 
     bot.reply_to(
         msg,
-        f"Welcome To Token Transaction Buy Bot, \n\n Your Bot Session Is Live And Watching {len(threading.enumerate())} Tokens With Ease 😊  \n\n  <b>ID: {msg.from_user.id}</b>",
+        f"Welcome To Token Transaction Buy Bot, \n\n Your Bot Session Is Live And Watching {len(threading.enumerate()) - 3} Tokens With Ease 😊  \n\n  <b>ID: {msg.from_user.id}</b>",
         parse_mode="html"
     )
 
@@ -19,7 +19,7 @@ def startbot(msg):
     #         msg.from_user.id,
     #         f"{e.name} Running...."
     #     )
-    for thread in threading.enumerate():
+    for thread in threading.enumerate()[3:]:
         sym = thread.getName()
 
         bot.send_message(
