@@ -23,8 +23,8 @@ def run():
 
         # executor.submit(start_streaming, token['symbol'], token['address'])
 
-        p = threading.Thread(start_streaming, name=token['symbol'], args=(
-            token['symbol'], token['address']))
+        p = threading.Thread(
+            target=start_streaming, args=(token['symbol'], token['address']), name=token['symbol'])
         p.start()
 
 

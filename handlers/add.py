@@ -24,7 +24,8 @@ def add_action(msg):
 
     # executor.submit(start_streaming, symbol, address, name=symbol)
 
-    p = threading.Thread(start_streaming, name=symbol, args=(symbol, address))
+    p = threading.Thread(target=start_streaming,
+                         args=(symbol, address), name=symbol)
     p.start()
 
     bot.send_message(

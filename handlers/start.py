@@ -14,6 +14,11 @@ def startbot(msg):
         parse_mode="html"
     )
 
+    # for e in active_children():
+    #     bot.send_message(
+    #         msg.from_user.id,
+    #         f"{e.name} Running...."
+    #     )
     for thread in threading.enumerate():
         sym = thread.getName()
 
