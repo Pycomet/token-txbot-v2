@@ -19,7 +19,7 @@ load_dotenv()
 # set_start_method('fork')
 # pool = multiprocessing.Pool(10)
 
-executor = ProcessPoolExecutor()
+executor = ProcessPoolExecutor(max_workers=10)
 
 
 # Logging Setup
