@@ -55,10 +55,10 @@ def start_event(symbol, event, tg_link, icon):
     bot.send_message(
         -1001553783220,
         f"<b>{event['name']} ({symbol})</b> Buy! \n{icon+icon+icon+icon+icon} \
-            \n\n 💵 {event['price']} ETH (${event['usd_value']}) \
+            \n\n 💵 {round(event['price'], 3)} ETH (${event['usd_value']}) \
             \n 🪪 <a href='https://etherscan.io/address/{event['address']}'>{event['address'][:5]}...{event['address'][-4:]}</a> | Txn | Track \
             \n 🔘 Market Cap <b> ${event['market_cap']}</b> \
-            \n\n <a href='https://dexscreener.com/ethereum/{event['contractAddress']}'>📊 Chart</a> <a href={tg_link}>📣 Telegram</a> <a href='https://app.uniswap.org/#/swap'>🤑Buy Now</a>",
+            \n\n <a href='https://dexscreener.com/ethereum/{event['contractAddress']}'>📊 Chart</a> <a href='{tg_link}'>📣 Telegram</a> <a href='https://app.uniswap.org/#/swap'>🤑Buy Now</a>",
         parse_mode="html",
         disable_web_page_preview=True
     )
@@ -77,20 +77,10 @@ def run():
         symbol = token["symbol"]
         address = token["address"]
 
-        # p = Process(target=start_streaming, name=token['symbol'], args=(token['symbol'], token['address']))
-        # p.start()
-
         r = executor.submit(start_streaming, symbol,
                             address, "https//t.me/codefred", "🟢")
         print(r.done())
         active_pools[symbol] = r
-
-        # p = threading.Thread(
-        #     target=start_streaming, args=(token['symbol'], token['address']), name=token['symbol'])
-        # p.start()
-        # active_pools[symbol] = pool.apply_async(
-        #     start_streaming, (symbol, address))
-        # active_pools[symbol].get()
 
 
 if __name__ == "__main__":
