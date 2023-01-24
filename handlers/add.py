@@ -1,6 +1,7 @@
 from config import *
 from bot import *
 
+
 @bot.message_handler(commands=['add'])
 def add_token(msg):
     "Remove Running Token Session"
@@ -18,7 +19,12 @@ def add_action(msg):
     address = data[0].lower()
     symbol = data[1].upper()
 
-    p = Process(target=start_streaming, name=symbol, args=(symbol, address))
+    # p = Process(target=start_streaming, name=symbol, args=(symbol, address))
+    # p.start()
+
+    # executor.submit(start_streaming, symbol, address, name=symbol)
+
+    p = threading.Thread(start_streaming, name=symbol, args=(symbol, address))
     p.start()
 
     bot.send_message(
@@ -26,4 +32,3 @@ def add_action(msg):
         f"📗 <b>New Token Alert </b> \n\nSession Name: <b>{symbol}</b> \n\nContract Address: <b>{address}</b>",
         parse_mode="html"
     )
-    

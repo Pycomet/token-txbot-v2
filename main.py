@@ -12,7 +12,7 @@ def checkWebhook():
 
 @app.route("/")
 def webhook():
-    run()
+    # run()
     bot.remove_webhook()
     bot.set_webhook(url=SERVER_URL + '/' + TOKEN)
     return "Application running!", 200

@@ -9,10 +9,14 @@ from datetime import date
 import telebot
 from telebot import types
 import cryptocompare as cc
+import threading
 from multiprocessing import Process, active_children
+from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 load_dotenv()
 
+
+executor = ThreadPoolExecutor()
 
 
 # Logging Setup

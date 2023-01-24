@@ -1,6 +1,6 @@
 from config import *
 from service import APISource
-from multiprocessing import Process
+# from multiprocessing import Process
 
 
 # Business logic For Sending Out Blasts Here
@@ -17,10 +17,15 @@ def run():
     for token in tokens:
         print(token["symbol"])
         print(token["address"])
-        
-        p = Process(target=start_streaming, name=token['symbol'], args=(token['symbol'], token['address']))
-        p.start()
 
+        # p = Process(target=start_streaming, name=token['symbol'], args=(token['symbol'], token['address']))
+        # p.start()
+
+        # executor.submit(start_streaming, token['symbol'], token['address'])
+
+        p = threading.Thread(start_streaming, name=token['symbol'], args=(
+            token['symbol'], token['address']))
+        p.start()
 
 
 def start_streaming(symbol, address):
@@ -49,7 +54,8 @@ def start_streaming(symbol, address):
                 # tx_hash = res_data['result']['hash']
 
                 # data = client.get_tx_details(tx_hash, token_symbol=symbol)
-                data = client.get_tx_details(events[0]['transactionHash'], token_symbol=symbol)
+                data = client.get_tx_details(
+                    events[0]['transactionHash'], token_symbol=symbol)
 
                 if data['buy_or_sell'] == 'buy':
                     logging.info(f"New Event!!! - {data}")
@@ -57,10 +63,8 @@ def start_streaming(symbol, address):
                 else:
                     logging.info("Not a valid Buy action")
 
-
             except Exception as e:
-                    logging.error(f"Please check & fix bug - {e}")
-
+                logging.error(f"Please check & fix bug - {e}")
 
 
 def start_event(symbol, event):
@@ -80,8 +84,6 @@ def start_event(symbol, event):
         parse_mode="html",
         disable_web_page_preview=True
     )
-
-
 
 
 if __name__ == "__main__":

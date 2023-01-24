@@ -1,4 +1,6 @@
 from config import *
+import threading
+
 
 @bot.message_handler(commands=['remove'])
 def remove_token(msg):
@@ -12,29 +14,30 @@ def remove_token(msg):
     bot.register_next_step_handler(question, remove_action)
 
 
-
 def remove_action(msg):
     token_symbol = msg.text.upper()
 
-    for session in active_children():
-        if session.name == token_symbol:
-            # Remove process and notify user
-            session.terminate()
-            bot.send_message(
-                msg.from_user.id,
-                f"<b>{token_symbol}</b> 🗑️ ... Has Been Removed From My Registry!  ",
-                parse_mode="html"
-            )
+    # for session in active_children():
+    #     if session.name == token_symbol:
+    #         # Remove process and notify user
+    #         session.terminate()
+    #         bot.send_message(
+    #             msg.from_user.id,
+    #             f"<b>{token_symbol}</b> 🗑️ ... Has Been Removed From My Registry!  ",
+    #             parse_mode="html"
+    #         )
 
-            return
-        else:
-            pass
+    #         return
+    #     else:
+    #         pass
+    for thread in threading.enumerate():
+        if token_symbol == thread.getName():
+            thread.cancel()
+            thread.join()
 
-    
     bot.send_message(
         msg.from_user.id,
         f"<b>{token_symbol}</b> Not Found!",
         parse_mode="html"
-    )   
+    )
     return
-
