@@ -18,22 +18,28 @@ def remove_action(msg):
     token_symbol = msg.text.upper()
 
     # for session in active_children():
-    #     if session.name == token_symbol:
-    #         # Remove process and notify user
-    #         session.terminate()
-    #         bot.send_message(
-    #             msg.from_user.id,
-    #             f"<b>{token_symbol}</b> 🗑️ ... Has Been Removed From My Registry!  ",
-    #             parse_mode="html"
-    #         )
+    if token_symbol.upper() in active_pools.keys():
+        # Remove process and notify user
+        try:
+            active_pools[token_symbol.upper()].set_result("Process completed.")
+        except:
+            active_pools[token_symbol.upper()].cancel()
 
-    #         return
-    #     else:
-    #         pass
-    for thread in threading.enumerate():
-        if token_symbol == thread.getName():
-            thread.cancel()
-            thread.join()
+        del active_pools[token_symbol.upper()]
+
+        bot.send_message(
+            msg.from_user.id,
+            f"<b>{token_symbol}</b> 🗑️ ... Has Been Removed From My Registry!  ",
+            parse_mode="html"
+        )
+
+        return
+    else:
+        pass
+    # for thread in threading.enumerate():
+    #     if token_symbol == thread.getName():
+    #         thread.cancel()
+    #         thread.join()
 
     bot.send_message(
         msg.from_user.id,

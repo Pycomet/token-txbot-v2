@@ -5,30 +5,8 @@ from service import APISource
 
 # Business logic For Sending Out Blasts Here
 
-def run():
-    "Start Everything"
 
-    file = open(f"{cwd}/sources.json")
-    data = json.load(file)
-
-    # pull token in models
-    tokens = data['tokens']
-
-    for token in tokens:
-        print(token["symbol"])
-        print(token["address"])
-
-        # p = Process(target=start_streaming, name=token['symbol'], args=(token['symbol'], token['address']))
-        # p.start()
-
-        # executor.submit(start_streaming, token['symbol'], token['address'])
-
-        p = threading.Thread(
-            target=start_streaming, args=(token['symbol'], token['address']), name=token['symbol'])
-        p.start()
-
-
-def start_streaming(symbol, address):
+def start_streaming(symbol, address, tg_link='', icon='🟢'):
     "Start Streaming A Certain Token Address"
     token_data = {}
     logging.info(f"Provision {symbol} - {address}")
@@ -59,7 +37,7 @@ def start_streaming(symbol, address):
 
                 if data['buy_or_sell'] == 'buy':
                     logging.info(f"New Event!!! - {data}")
-                    start_event(symbol, data)
+                    start_event(symbol, data, tg_link, icon)
                 else:
                     logging.info("Not a valid Buy action")
 
@@ -67,7 +45,7 @@ def start_streaming(symbol, address):
                 logging.error(f"Please check & fix bug - {e}")
 
 
-def start_event(symbol, event):
+def start_event(symbol, event, tg_link, icon):
     "Send Buy Event To Group"
     file = open(f"{cwd}/sources.json")
     data = json.load(file)
@@ -76,14 +54,43 @@ def start_event(symbol, event):
     # for chat in channels:
     bot.send_message(
         -1001553783220,
-        f"<b>{event['name']} ({symbol})</b> Buy! \n🟢🟢🟢🟢🟢🟢 \
+        f"<b>{event['name']} ({symbol})</b> Buy! \n{icon+icon+icon+icon+icon} \
             \n\n 💵 {event['price']} ETH (${event['usd_value']}) \
             \n 🪪 <a href='https://etherscan.io/address/{event['address']}'>{event['address'][:5]}...{event['address'][-4:]}</a> | Txn | Track \
             \n 🔘 Market Cap <b> ${event['market_cap']}</b> \
-            \n\n <a href='https://dexscreener.com/ethereum/{event['contractAddress']}'>📊 Chart</a>",
+            \n\n <a href='https://dexscreener.com/ethereum/{event['contractAddress']}'>📊 Chart</a> <a href={tg_link}>📣 Telegram</a> <a href='https://app.uniswap.org/#/swap'>🤑Buy Now</a>",
         parse_mode="html",
         disable_web_page_preview=True
     )
+
+
+def run():
+    "Start Everything"
+
+    file = open(f"{cwd}/sources.json")
+    data = json.load(file)
+
+    # pull token in models
+    tokens = data['tokens']
+
+    for token in tokens:
+        symbol = token["symbol"]
+        address = token["address"]
+
+        # p = Process(target=start_streaming, name=token['symbol'], args=(token['symbol'], token['address']))
+        # p.start()
+
+        r = executor.submit(start_streaming, symbol,
+                            address, "https//t.me/codefred", "🟢")
+        print(r.done())
+        active_pools[symbol] = r
+
+        # p = threading.Thread(
+        #     target=start_streaming, args=(token['symbol'], token['address']), name=token['symbol'])
+        # p.start()
+        # active_pools[symbol] = pool.apply_async(
+        #     start_streaming, (symbol, address))
+        # active_pools[symbol].get()
 
 
 if __name__ == "__main__":

@@ -10,19 +10,21 @@ def startbot(msg):
 
     bot.reply_to(
         msg,
-        f"Welcome To Token Transaction Buy Bot, \n\n Your Bot Session Is Live And Watching {len(threading.enumerate()) - 3} Tokens With Ease 😊  \n\n  <b>ID: {msg.from_user.id}</b>",
+        f"Welcome To Token Transaction Buy Bot, \n\n Your Bot Session Is Live And Watching {len(active_pools.keys())} Tokens With Ease 😊  \n\n  <b>ID: {msg.from_user.id}</b>",
         parse_mode="html"
     )
+    print(active_pools)
 
-    # for e in active_children():
-    #     bot.send_message(
-    #         msg.from_user.id,
-    #         f"{e.name} Running...."
-    #     )
-    for thread in threading.enumerate()[3:]:
-        sym = thread.getName()
-
+    for e in active_pools.keys():
         bot.send_message(
             msg.from_user.id,
-            f"{sym} Running...."
+            f"{e} Running....{active_pools[e]._state}"
         )
+
+    # for thread in threading.enumerate()[3:]:
+    #     sym = thread.getName()
+
+    #     bot.send_message(
+    #         msg.from_user.id,
+    #         f"{sym} Running...."
+    #     )

@@ -10,13 +10,16 @@ import telebot
 from telebot import types
 import cryptocompare as cc
 import threading
-from multiprocessing import Process, active_children
-from concurrent.futures import ThreadPoolExecutor
+from multiprocessing import set_start_method, Process, active_children
+from concurrent.futures import ProcessPoolExecutor
+import multiprocessing
 from dotenv import load_dotenv
 load_dotenv()
 
+# set_start_method('fork')
+# pool = multiprocessing.Pool(10)
 
-executor = ThreadPoolExecutor()
+executor = ProcessPoolExecutor()
 
 
 # Logging Setup
@@ -41,3 +44,5 @@ WEB3_API_KEY = os.getenv("WEB3_API_KEY")
 NODE_PROVIDER = os.getenv("NODE_PROVIDER")
 
 web3_client = Web3(Web3.HTTPProvider(NODE_PROVIDER))
+
+active_pools = {}
