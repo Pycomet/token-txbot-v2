@@ -8,7 +8,7 @@ def add_token(msg):
 
     question = bot.send_message(
         msg.from_user.id,
-        "Please paste the <b>token address</b> of the token you would like Bobby to track. (Example: <b>0xe03B2642A5111aD0EFc0cbCe766498c2dd562Ae9 BC BCChat 🟢</b>)",
+        "Please paste the <b>token address</b> of the token you would like Bobby to track. (Example: <b>0xe03B2642A5111aD0EFc0cbCe766498c2dd562Ae9 BC https://t.me/BCChat 🟢</b>)",
         parse_mode="html"
     )
     bot.register_next_step_handler(question, add_action)
