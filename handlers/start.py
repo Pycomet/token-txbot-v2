@@ -18,7 +18,7 @@ def startbot(msg):
     for e in active_pools.keys():
         bot.send_message(
             msg.from_user.id,
-            f"{e} Running....{active_pools[e]._state}"
+            f"{e} Running"
         )
 
     # for thread in threading.enumerate()[3:]:
