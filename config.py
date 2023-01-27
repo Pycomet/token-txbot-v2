@@ -34,7 +34,7 @@ TOKEN = os.getenv('TOKEN')
 
 cwd = os.getcwd()
 
-DEBUG = True
+DEBUG = False
 SERVER_URL = os.getenv("SERVER_URL")
 
 bot = telebot.TeleBot(TOKEN)
