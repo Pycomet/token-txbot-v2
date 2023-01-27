@@ -17,7 +17,7 @@ def start_streaming(symbol, address, tg_link='', icon='🟢'):
         filters = client.get_buy_events()
     else:
         bot.send_message(
-            -1001553783220,
+            'ETHTopBullishTrending',
             f"🔔 Invalid Contract Address For {symbol} \n\n <b>Action Required 🔔🔔</b>"
         )
         logging.error(f"END STREAM (Invalid Contract Address)- {address}!!!")
@@ -53,7 +53,7 @@ def start_event(symbol, event, tg_link, icon):
     # channels = data['channels']
     # for chat in channels:
     bot.send_message(
-        -1001553783220,
+        'ETHTopBullishTrending',
         f"<b>{event['name']} ({symbol})</b> Buy! \n{icon+icon+icon+icon+icon} \
             \n\n 💵 {round(event['price'], 3)} ETH (${event['usd_value']}) \
             \n 🪪 <a href='https://etherscan.io/address/{event['address']}'>{event['address'][:5]}...{event['address'][-4:]}</a> | Txn | Track \
