@@ -2,19 +2,27 @@
     "tokens": [
         {
             "symbol": "OHMI",
-            "address": "0x4159862bcF6B4393A80550b1ed03DFfa6f90533C"
+            "address": "0x4159862bcF6B4393A80550b1ed03DFfa6f90533C",
+            "tg_link": "https://t.me/topbullishbot",
+            "icon": "👋"
         },
         {
             "symbol": "BC",
-            "address": "0xe03B2642A5111aD0EFc0cbCe766498c2dd562Ae9"
+            "address": "0xe03B2642A5111aD0EFc0cbCe766498c2dd562Ae9",
+            "tg_link": "https://t.me/topbullishbot",
+            "icon": "🟢"
         },
         {
             "symbol": "KNDM",
-            "address": "0x1ae378cC5d38350Ec90cE9bcf827a544cB2BBA75"
+            "address": "0x1ae378cC5d38350Ec90cE9bcf827a544cB2BBA75",
+            "tg_link": "https://t.me/topbullishbot",
+            "icon": "👋"
         },
         {
             "symbol": "$ANZEN",
-            "address": "0x175BCA415Df9739ef5b9a685dd22d76D26189c20"
+            "address": "0x175BCA415Df9739ef5b9a685dd22d76D26189c20",
+            "tg_link": "https://t.me/topbullishbot",
+            "icon": "👋🟢"
         }
     ],
     "channels": [

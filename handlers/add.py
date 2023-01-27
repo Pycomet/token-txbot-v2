@@ -25,15 +25,33 @@ def add_action(msg):
     # p.start()
 
     if len(data) == 4:
-        r = executor.submit(start_streaming, symbol, address, tg_link, icon)
-        print(r.done())
-        active_pools[symbol] = r
+        # r = executor.submit(start_streaming, symbol, address, tg_link, icon)
+        # print(r.done())
+        active_pools[symbol] = {
+            "symbol": symbol,
+            "address": address,
+            "tg_link": tg_link,
+            "icon": icon
+        }
 
         bot.send_message(
             msg.from_user.id,
             f"📗 <b>New Token Alert {icon} </b> \n\nSession Name: <b>{symbol}</b> \n\nContract Address: <b>{address}</b> \n\nTelegram Link: <b>{tg_link}</b>",
             parse_mode="html"
         )
+
+        for token_symbol in active_pools.keys():
+            data = active_pools[token_symbol]
+
+            r = executor.submit(
+                start_streaming,
+                data['symbol'],
+                data['address'],
+                data['tg_link'],
+                data['icon'],
+            )
+
+            print(r.done())
 
     else:
         bot.send_message(

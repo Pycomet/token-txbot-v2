@@ -76,11 +76,13 @@ def run():
     for token in tokens:
         symbol = token["symbol"]
         address = token["address"]
+        tg_link = token["tg_link"]
+        icon = token["icon"]
 
         r = executor.submit(start_streaming, symbol,
-                            address, "https//t.me/codefred", "🟢")
+                            address, tg_link, icon)
         print(r.done())
-        active_pools[symbol] = r
+        active_pools[symbol] = token
 
 
 if __name__ == "__main__":

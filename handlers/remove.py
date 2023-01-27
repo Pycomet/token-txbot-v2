@@ -1,4 +1,5 @@
 from config import *
+from bot import *
 import threading
 
 
@@ -19,11 +20,8 @@ def remove_action(msg):
 
     # for session in active_children():
     if token_symbol.upper() in active_pools.keys():
-        # Remove process and notify user
-        try:
-            active_pools[token_symbol.upper()].set_result("Process completed.")
-        except:
-            active_pools[token_symbol.upper()].cancel()
+        # Kill All Processes
+        executor.shutdown(wait=False)
 
         del active_pools[token_symbol.upper()]
 
@@ -32,6 +30,19 @@ def remove_action(msg):
             f"<b>{token_symbol}</b> 🗑️ ... Has Been Removed From My Registry!  ",
             parse_mode="html"
         )
+
+        for token_symbol in active_pools.keys():
+            data = active_pools[token_symbol]
+
+            r = executor.submit(
+                start_streaming,
+                data['symbol'],
+                data['address'],
+                data['tg_link'],
+                data['icon'],
+            )
+
+            print(r.done())
 
         return
     else:
