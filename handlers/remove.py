@@ -18,10 +18,16 @@ def remove_token(msg):
 def remove_action(msg):
     token_symbol = msg.text.upper()
 
-    # for session in active_children():
+    for session in active_children():
+        session.terminate()
+        print("terminator")
     if token_symbol.upper() in active_pools.keys():
+        print("Found")
         # Kill All Processes
+        global executor
         executor.shutdown(wait=False)
+
+        executor = ProcessPoolExecutor(max_workers=10)
 
         del active_pools[token_symbol.upper()]
 
@@ -44,7 +50,7 @@ def remove_action(msg):
 
             print(r.done())
 
-        return
+        return executor
     else:
         pass
     # for thread in threading.enumerate():

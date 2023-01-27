@@ -10,7 +10,9 @@ import telebot
 from telebot import types
 import cryptocompare as cc
 import threading
-from multiprocessing import set_start_method, Process, active_children
+from multiprocessing import Manager
+from multiprocessing import Event
+from multiprocessing import set_start_method, Process, Semaphore, active_children
 from concurrent.futures import ProcessPoolExecutor
 import multiprocessing
 from dotenv import load_dotenv
@@ -32,7 +34,7 @@ TOKEN = os.getenv('TOKEN')
 
 cwd = os.getcwd()
 
-DEBUG = False
+DEBUG = True
 SERVER_URL = os.getenv("SERVER_URL")
 
 bot = telebot.TeleBot(TOKEN)
@@ -46,3 +48,17 @@ NODE_PROVIDER = os.getenv("NODE_PROVIDER")
 web3_client = Web3(Web3.HTTPProvider(NODE_PROVIDER))
 
 active_pools = {}
+
+
+class SemaphoreContext:
+    def __init__(self, semaphore):
+        self.semaphore = semaphore
+
+    def __enter__(self):
+        self.semaphore.acquire()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.semaphore.release()
+
+
+sem = Semaphore(1)

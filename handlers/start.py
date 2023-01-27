@@ -10,10 +10,14 @@ def startbot(msg):
 
     bot.reply_to(
         msg,
-        f"Welcome To Token Transaction Buy Bot, \n\n Your Bot Session Is Live And Watching {len(active_pools.keys())} Tokens With Ease 😊  \n\n  <b>ID: {msg.from_user.id}</b>",
+        f"Welcome To Token Transaction Buy Bot, \n\n Your Bot Session Is Live And Watching {len(active_children())} Tokens With Ease 😊  \n\n  <b>ID: {msg.from_user.id}</b>",
         parse_mode="html"
     )
     print(active_pools)
+    # bot.send_message(
+    #     'ETHTopBullishTrending',
+    #     "HELl o Test ,e"
+    # )
 
     for e in active_pools.keys():
         bot.send_message(

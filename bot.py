@@ -6,7 +6,7 @@ from service import APISource
 # Business logic For Sending Out Blasts Here
 
 
-def start_streaming(symbol, address, tg_link='', icon='🟢'):
+def start_streaming(symbol, address, tg_link, icon):
     "Start Streaming A Certain Token Address"
     token_data = {}
     logging.info(f"Provision {symbol} - {address}")
@@ -17,7 +17,7 @@ def start_streaming(symbol, address, tg_link='', icon='🟢'):
         filters = client.get_buy_events()
     else:
         bot.send_message(
-            'ETHTopBullishTrending',
+            -1001553783220,
             f"🔔 Invalid Contract Address For {symbol} \n\n <b>Action Required 🔔🔔</b>"
         )
         logging.error(f"END STREAM (Invalid Contract Address)- {address}!!!")
@@ -53,7 +53,7 @@ def start_event(symbol, event, tg_link, icon):
     # channels = data['channels']
     # for chat in channels:
     bot.send_message(
-        'ETHTopBullishTrending',
+        -1001553783220,
         f"<b>{event['name']} ({symbol})</b> Buy! \n{icon+icon+icon+icon+icon} \
             \n\n 💵 {round(event['price'], 3)} ETH (${event['usd_value']}) \
             \n 🪪 <a href='https://etherscan.io/address/{event['address']}'>{event['address'][:5]}...{event['address'][-4:]}</a> | Txn | Track \
@@ -79,10 +79,11 @@ def run():
         tg_link = token["tg_link"]
         icon = token["icon"]
 
-        r = executor.submit(start_streaming, symbol,
-                            address, tg_link, icon)
-        print(r.done())
-        active_pools[symbol] = token
+        with SemaphoreContext(sem):
+            r = executor.submit(start_streaming, symbol,
+                                address, tg_link, icon)
+            print(r.done())
+            active_pools[symbol] = token
 
 
 if __name__ == "__main__":
